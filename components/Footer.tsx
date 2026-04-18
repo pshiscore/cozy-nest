@@ -10,17 +10,23 @@ export default function Footer() {
         >
           come home to calm.
         </p>
-        <p
-          className="text-xs tracking-widest uppercase text-[#b8c8b0]"
-          style={{ fontFamily: "var(--font-poppins), sans-serif" }}
-        >
-          <Link
-            href="/"
-            className="hover:text-[#f0ece4] transition-colors"
+        <div className="flex flex-col items-center md:items-end gap-1">
+          <p
+            className="text-xs tracking-widest uppercase text-[#b8c8b0]"
+            style={{ fontFamily: "var(--font-poppins), sans-serif" }}
           >
-            cozynestbylidia.com
-          </Link>
-        </p>
+            <Link href="/" className="hover:text-[#f0ece4] transition-colors">
+              cozynestbylidia.com
+            </Link>
+          </p>
+          <a
+            href="mailto:hello@cozynestbylidia.com"
+            className="text-xs text-[#b8c8b0] hover:text-[#f0ece4] transition-colors"
+            style={{ fontFamily: "var(--font-poppins), sans-serif" }}
+          >
+            hello@cozynestbylidia.com
+          </a>
+        </div>
       </div>
     </footer>
   );
