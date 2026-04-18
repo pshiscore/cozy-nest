@@ -1,4 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  SERVICE_TYPES,
+  SERVICE_FREQUENCIES,
+  ADDONS,
+  type ServiceTypeValue,
+  type ServiceFrequencyValue,
+  type AddonValue,
+  getServiceTypeLabel,
+  getServiceFrequencyLabel,
+  getAddonLabel,
+} from "@/lib/form-labels";
 
 const BREVO_API = "https://api.brevo.com/v3";
 const LIDIA_EMAIL = "hello@cozynestbylidia.com";
@@ -6,40 +17,17 @@ const LIDIA_NAME = "Lidia @ Cozy Nest";
 const SENDER = { name: "Cozy Nest by Lidia", email: "hello@cozynestbylidia.com" };
 const LIST_ID = 3;
 
-const ALLOWED_SERVICE_TYPES = [
-  "Free Walkthrough · 20 min",
-  "Home Reset · 60 min",
-  "Home Reset · 90 min",
-  "Mommy Reset · 1 hr",
-  "Not sure — help me decide",
-] as const;
-
-const ALLOWED_FREQUENCIES = [
-  "2× / week",
-  "1× / week",
-  "One-time visit",
-  "Not sure — help me decide",
-] as const;
-
-const ALLOWED_ADDONS = [
-  "Fridge Cleaning",
-  "Pantry Reset",
-  "Organization Projects",
-  "Deep Clean",
-  "Toy Purge",
-] as const;
-
-type ServiceType = (typeof ALLOWED_SERVICE_TYPES)[number];
-type ServiceFrequency = (typeof ALLOWED_FREQUENCIES)[number];
-type Addon = (typeof ALLOWED_ADDONS)[number];
+const VALID_SERVICE_TYPES = Object.keys(SERVICE_TYPES) as ServiceTypeValue[];
+const VALID_FREQUENCIES = Object.keys(SERVICE_FREQUENCIES) as ServiceFrequencyValue[];
+const VALID_ADDONS = Object.keys(ADDONS) as AddonValue[];
 
 interface ContactPayload {
   email: string;
   firstName: string;
   neighborhood?: string;
-  serviceType: ServiceType;
-  serviceFrequency: ServiceFrequency;
-  addons?: Addon[];
+  serviceType: ServiceTypeValue;
+  serviceFrequency: ServiceFrequencyValue;
+  addons?: AddonValue[];
   message?: string;
 }
 
@@ -67,49 +55,41 @@ export async function POST(req: NextRequest) {
 
   const { email, firstName, neighborhood, serviceType, serviceFrequency, addons, message } = body;
 
-  // Required field validation
   if (!email || !isValidEmail(email)) {
     return NextResponse.json({ error: "A valid email address is required." }, { status: 400 });
   }
   if (!firstName?.trim()) {
     return NextResponse.json({ error: "First name is required." }, { status: 400 });
   }
-  if (!serviceType || !(ALLOWED_SERVICE_TYPES as readonly string[]).includes(serviceType)) {
+  if (!serviceType || !VALID_SERVICE_TYPES.includes(serviceType)) {
     return NextResponse.json({ error: "Please select a valid service type." }, { status: 400 });
   }
-  if (!serviceFrequency || !(ALLOWED_FREQUENCIES as readonly string[]).includes(serviceFrequency)) {
+  if (!serviceFrequency || !VALID_FREQUENCIES.includes(serviceFrequency)) {
     return NextResponse.json({ error: "Please select a valid rhythm." }, { status: 400 });
   }
   if (addons) {
-    const invalidAddon = addons.find(
-      (a) => !(ALLOWED_ADDONS as readonly string[]).includes(a)
-    );
-    if (invalidAddon) {
-      return NextResponse.json({ error: `Invalid add-on: ${invalidAddon}` }, { status: 400 });
+    const invalid = addons.find((a) => !VALID_ADDONS.includes(a));
+    if (invalid) {
+      return NextResponse.json({ error: `Invalid add-on: ${invalid}` }, { status: 400 });
     }
   }
 
-  // Build attributes object — only include keys with real values
+  // Build Brevo attributes — only include keys with real values
   const attributes: Record<string, string> = {
     FIRSTNAME: firstName.trim(),
     SERVICE_TYPE: serviceType,
     SERVICE_FREQUENCY: serviceFrequency,
-    LEAD_SOURCE: "Contact Form",
+    LEAD_SOURCE: "contact_form",
   };
   if (neighborhood?.trim()) attributes.NEIGHBORHOOD = neighborhood.trim();
-  if (addons && addons.length > 0) attributes.ADDONS = addons.join(", ");
+  if (addons && addons.length > 0) attributes.ADDONS = addons.join(",");
   if (message?.trim()) attributes.MESSAGE = message.trim();
 
   // 1. Upsert contact — critical
   const contactRes = await fetch(`${BREVO_API}/contacts`, {
     method: "POST",
     headers: brevoHeaders(),
-    body: JSON.stringify({
-      email,
-      attributes,
-      listIds: [LIST_ID],
-      updateEnabled: true,
-    }),
+    body: JSON.stringify({ email, attributes, listIds: [LIST_ID], updateEnabled: true }),
   });
 
   if (!contactRes.ok && contactRes.status !== 204) {
@@ -121,7 +101,13 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Build Lidia's notification HTML — only render sections with values
+  // Translate identifiers to human-readable labels for emails
+  const serviceLabel = getServiceTypeLabel(serviceType);
+  const frequencyLabel = getServiceFrequencyLabel(serviceFrequency);
+  const addonLabels = addons && addons.length > 0
+    ? addons.map(getAddonLabel).join(", ")
+    : "None selected";
+
   const notificationHtml = `
     <h2 style="font-family:sans-serif;color:#3d5c44;margin-bottom:4px">
       🌿 New inquiry from ${firstName.trim()}
@@ -133,43 +119,50 @@ export async function POST(req: NextRequest) {
     ${neighborhood?.trim() ? `<p style="font-family:sans-serif;margin:4px 0"><strong>Neighborhood:</strong> ${neighborhood.trim()}</p>` : ""}
 
     <h3 style="font-family:sans-serif;color:#7a9478;margin-top:24px;margin-bottom:8px;text-transform:uppercase;font-size:11px;letter-spacing:1px">Service</h3>
-    <p style="font-family:sans-serif;margin:4px 0"><strong>Which Reset:</strong> ${serviceType}</p>
-    <p style="font-family:sans-serif;margin:4px 0"><strong>Rhythm:</strong> ${serviceFrequency}</p>
-    <p style="font-family:sans-serif;margin:4px 0"><strong>Add-ons:</strong> ${addons && addons.length > 0 ? addons.join(", ") : "None selected"}</p>
+    <p style="font-family:sans-serif;margin:4px 0"><strong>Which Reset:</strong> ${serviceLabel}</p>
+    <p style="font-family:sans-serif;margin:4px 0"><strong>Rhythm:</strong> ${frequencyLabel}</p>
+    <p style="font-family:sans-serif;margin:4px 0"><strong>Add-ons:</strong> ${addonLabels}</p>
 
-    ${
-      message?.trim()
-        ? `<h3 style="font-family:sans-serif;color:#7a9478;margin-top:24px;margin-bottom:8px;text-transform:uppercase;font-size:11px;letter-spacing:1px">Message</h3>
-           <p style="font-family:sans-serif;margin:4px 0">${message.trim()}</p>`
-        : ""
-    }
+    ${message?.trim() ? `
+    <h3 style="font-family:sans-serif;color:#7a9478;margin-top:24px;margin-bottom:8px;text-transform:uppercase;font-size:11px;letter-spacing:1px">Message</h3>
+    <p style="font-family:sans-serif;margin:4px 0">${message.trim()}</p>` : ""}
 
     <p style="font-family:sans-serif;color:#7a9478;font-style:italic;margin-top:24px">
       Reply directly to this email to reach them.
     </p>
   `.trim();
 
-  // Confirmation email body — swap middle line for "not sure" case
-  const isUndecided = serviceType === "Not sure — help me decide";
+  const notificationText =
+    `New inquiry from ${firstName.trim()}\n\n` +
+    `CONTACT\nName: ${firstName.trim()}\nEmail: ${email}` +
+    (neighborhood?.trim() ? `\nNeighborhood: ${neighborhood.trim()}` : "") +
+    `\n\nSERVICE\nWhich Reset: ${serviceLabel}\nRhythm: ${frequencyLabel}\nAdd-ons: ${addonLabels}` +
+    (message?.trim() ? `\n\nMESSAGE\n${message.trim()}` : "");
+
+  const isUndecided = serviceType === "not_sure";
   const confirmationMiddleLine = isUndecided
     ? "Lidia got your note and will reply within 24 hours to help you figure out the right fit."
-    : `Lidia got your note about a <strong>${serviceType}</strong> and will reply within 24 hours with next steps.`;
+    : `Lidia got your note about a <strong>${serviceLabel}</strong> and will reply within 24 hours with next steps.`;
+  const confirmationMiddleText = isUndecided
+    ? "Lidia got your note and will reply within 24 hours to help you figure out the right fit."
+    : `Lidia got your note about a ${serviceLabel} and will reply within 24 hours with next steps.`;
+  const addonsLine = addons && addons.length > 0
+    ? `<p style="font-family:sans-serif;line-height:1.7">If you mentioned add-ons or anything special, she'll factor those in.</p>`
+    : "";
+  const addonsTextLine = addons && addons.length > 0
+    ? "\n\nIf you mentioned add-ons or anything special, she'll factor those in."
+    : "";
 
   const confirmationHtml = `
     <p style="font-family:sans-serif">Hi ${firstName.trim()},</p>
     <p style="font-family:sans-serif;line-height:1.7">${confirmationMiddleLine}</p>
-    ${
-      addons && addons.length > 0
-        ? `<p style="font-family:sans-serif;line-height:1.7">If you mentioned add-ons or anything special, she'll factor those in.</p>`
-        : ""
-    }
+    ${addonsLine}
     <p style="font-family:sans-serif">— The Cozy Nest team<br>
     <a href="mailto:hello@cozynestbylidia.com" style="color:#7a9478">hello@cozynestbylidia.com</a></p>
   `.trim();
 
-  const confirmationText = isUndecided
-    ? `Hi ${firstName.trim()},\n\nLidia got your note and will reply within 24 hours to help you figure out the right fit.\n\n— The Cozy Nest team\nhello@cozynestbylidia.com`
-    : `Hi ${firstName.trim()},\n\nLidia got your note about a ${serviceType} and will reply within 24 hours with next steps.${addons && addons.length > 0 ? "\n\nIf you mentioned add-ons or anything special, she'll factor those in." : ""}\n\n— The Cozy Nest team\nhello@cozynestbylidia.com`;
+  const confirmationText =
+    `Hi ${firstName.trim()},\n\n${confirmationMiddleText}${addonsTextLine}\n\n— The Cozy Nest team\nhello@cozynestbylidia.com`;
 
   // 2 & 3. Emails — best-effort
   await Promise.allSettled([
@@ -182,7 +175,7 @@ export async function POST(req: NextRequest) {
         replyTo: { email, name: firstName.trim() },
         subject: `New booking request from ${firstName.trim()}`,
         htmlContent: notificationHtml,
-        textContent: `New inquiry from ${firstName.trim()}\n\nCONTACT\nName: ${firstName.trim()}\nEmail: ${email}${neighborhood?.trim() ? `\nNeighborhood: ${neighborhood.trim()}` : ""}\n\nSERVICE\nWhich Reset: ${serviceType}\nRhythm: ${serviceFrequency}\nAdd-ons: ${addons && addons.length > 0 ? addons.join(", ") : "None selected"}${message?.trim() ? `\n\nMESSAGE\n${message.trim()}` : ""}`,
+        textContent: notificationText,
       }),
     }).then(async (r) => {
       if (!r.ok) console.error("Lidia notification email failed:", r.status, await r.text());
