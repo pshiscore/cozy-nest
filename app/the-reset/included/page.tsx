@@ -74,7 +74,7 @@ const rooms = [
 export default function IncludedPage() {
   return (
     <>
-      <section className="bg-[#f0ece4] py-20 md:py-28">
+      <section className="bg-[#f0ece4] py-10 md:py-14">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-16">
             <p

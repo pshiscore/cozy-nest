@@ -9,7 +9,7 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <>
-      <section className="bg-[#f0ece4] py-20 md:py-28">
+      <section className="bg-[#f0ece4] py-10 md:py-14">
         <div className="max-w-4xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-start">
           <div>
             <p

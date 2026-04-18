@@ -9,7 +9,7 @@ export default function HomePage() {
         <div className="absolute top-10 right-0 w-72 h-72 bg-[#e8e2d9] rounded-full opacity-60 translate-x-1/3 -translate-y-1/4 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-56 h-56 bg-[#d4cfc6] rounded-full opacity-40 -translate-x-1/3 translate-y-1/3 pointer-events-none" />
 
-        <div className="max-w-6xl mx-auto px-6 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center relative">
+        <div className="max-w-6xl mx-auto px-6 py-10 md:py-14 grid md:grid-cols-2 gap-12 items-center relative">
           {/* Left: copy */}
           <div>
             <p
@@ -109,7 +109,7 @@ export default function HomePage() {
       </section>
 
       {/* Three ways we help */}
-      <section className="bg-[#f0ece4] py-20 md:py-28">
+      <section className="bg-[#f0ece4] py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-14">
             <p
@@ -180,7 +180,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA strip */}
-      <section className="bg-[#3d5c44] py-16">
+      <section className="bg-[#3d5c44] py-10">
         <div className="max-w-2xl mx-auto px-6 text-center">
           <p
             className="text-xs tracking-widest uppercase text-[#b8c8b0] mb-4"

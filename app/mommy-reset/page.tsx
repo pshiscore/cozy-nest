@@ -33,7 +33,7 @@ export default function MommyResetPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-[#f0e8e4] py-20 md:py-28 relative overflow-hidden">
+      <section className="bg-[#f0e8e4] py-10 md:py-14 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#e8ddd8] rounded-full opacity-50 translate-x-1/3 -translate-y-1/3 pointer-events-none" />
         <div className="absolute bottom-0 right-16 w-48 h-48 bg-[#b8c8b0] rounded-full opacity-30 translate-y-1/3 pointer-events-none" />
 
@@ -67,7 +67,7 @@ export default function MommyResetPage() {
       </section>
 
       {/* Four steps */}
-      <section className="bg-[#f0ece4] py-20">
+      <section className="bg-[#f0ece4] py-12">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-14">
             <p
@@ -115,7 +115,7 @@ export default function MommyResetPage() {
       </section>
 
       {/* Testimonial */}
-      <section className="bg-[#3d5c44] py-16 px-6">
+      <section className="bg-[#3d5c44] py-10 px-6">
         <div className="max-w-2xl mx-auto text-center">
           <blockquote>
             <p

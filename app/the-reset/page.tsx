@@ -10,7 +10,7 @@ export default function TheResetPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-[#e8ede9] py-20 md:py-28">
+      <section className="bg-[#e8ede9] py-10 md:py-14">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <p
             className="text-xs tracking-widest uppercase text-[#7a9478] mb-4"
@@ -50,7 +50,7 @@ export default function TheResetPage() {
       </section>
 
       {/* Three pillars */}
-      <section className="bg-[#f0ece4] py-16 md:py-20">
+      <section className="bg-[#f0ece4] py-10 md:py-12">
         <div className="max-w-4xl mx-auto px-6">
           <div className="grid md:grid-cols-3 divide-x divide-[#e8e2d9]">
             {[
@@ -96,7 +96,7 @@ export default function TheResetPage() {
       </section>
 
       {/* What it is / isn't */}
-      <section className="bg-[#f0ece4] py-10 pb-20">
+      <section className="bg-[#f0ece4] py-6 pb-12">
         <div className="max-w-4xl mx-auto px-6">
           <div className="bg-[#e8ddd8] rounded-2xl p-8 md:p-12 grid md:grid-cols-2 gap-10">
             <div>

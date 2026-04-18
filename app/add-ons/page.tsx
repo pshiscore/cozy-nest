@@ -43,7 +43,7 @@ export default function AddOnsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-[#f0ece4] py-20 md:py-28">
+      <section className="bg-[#f0ece4] py-10 md:py-14">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <p
             className="text-xs tracking-widest uppercase text-[#7a9478] mb-4"
@@ -70,7 +70,7 @@ export default function AddOnsPage() {
       </section>
 
       {/* Add-on cards */}
-      <section className="bg-[#f0ece4] pb-24">
+      <section className="bg-[#f0ece4] pb-12">
         <div className="max-w-4xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-6">
             {addOns.map((addon) => (

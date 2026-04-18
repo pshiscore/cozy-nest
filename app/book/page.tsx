@@ -9,7 +9,7 @@ export default function BookPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-[#f0ece4] via-[#e8ddd8] to-[#e8ede9] py-20 md:py-28">
+      <section className="bg-gradient-to-br from-[#f0ece4] via-[#e8ddd8] to-[#e8ede9] py-10 md:py-14">
         <div className="max-w-2xl mx-auto px-6 text-center">
           <p
             className="text-xs tracking-widest uppercase text-[#7a9478] mb-4"
@@ -37,7 +37,7 @@ export default function BookPage() {
       </section>
 
       {/* Form + sidebar */}
-      <section className="bg-[#f0ece4] py-16 pb-24">
+      <section className="bg-[#f0ece4] py-10 pb-12">
         <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-[1fr_320px] gap-10">
           <BookForm />
 

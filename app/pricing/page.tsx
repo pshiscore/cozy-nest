@@ -57,7 +57,7 @@ export default function PricingPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-[#f0ece4] py-20 md:py-28">
+      <section className="bg-[#f0ece4] py-10 md:py-14">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <p
             className="text-xs tracking-widest uppercase text-[#7a9478] mb-4"
@@ -83,7 +83,7 @@ export default function PricingPage() {
       </section>
 
       {/* Pricing cards */}
-      <section className="bg-[#f0ece4] pb-20">
+      <section className="bg-[#f0ece4] pb-12">
         <div className="max-w-5xl mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-6 items-start">
             {plans.map((plan) => (
