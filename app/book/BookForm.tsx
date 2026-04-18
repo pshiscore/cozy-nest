@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 import {
   SERVICE_TYPES,
   SERVICE_FREQUENCIES,
@@ -18,16 +19,37 @@ const inputClass =
 const selectClass = inputClass + " appearance-none";
 const ff = { fontFamily: "var(--font-poppins), sans-serif" };
 
+function formatPhoneDisplay(raw: string): string {
+  // Strip everything except digits and leading +
+  const digits = raw.replace(/\D/g, "");
+  if (digits.length === 0) return "";
+  if (digits.length <= 3) return `(${digits}`;
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+}
+
+function toE164(display: string): string | null {
+  const parsed = parsePhoneNumberFromString(display, "US");
+  if (parsed?.isValid()) return parsed.number as string;
+  return null;
+}
+
 export default function BookForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [selectedAddons, setSelectedAddons] = useState<AddonValue[]>([]);
+  const [phoneDisplay, setPhoneDisplay] = useState("");
 
   function toggleAddon(key: AddonValue) {
     setSelectedAddons((prev) =>
       prev.includes(key) ? prev.filter((a) => a !== key) : [...prev, key]
     );
+  }
+
+  function handlePhoneChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const formatted = formatPhoneDisplay(e.target.value);
+    setPhoneDisplay(formatted);
   }
 
   function validate(fd: FormData): Record<string, string> {
@@ -36,6 +58,9 @@ export default function BookForm() {
     if (!fd.get("email")?.toString().trim()) errors.email = "Email is required.";
     if (!fd.get("serviceType")) errors.serviceType = "Please select a service.";
     if (!fd.get("serviceFrequency")) errors.serviceFrequency = "Please select a rhythm.";
+    if (phoneDisplay.trim() && !toE164(phoneDisplay)) {
+      errors.phone = "Please enter a valid phone number.";
+    }
     return errors;
   }
 
@@ -52,9 +77,12 @@ export default function BookForm() {
     setFieldErrors({});
     setStatus("submitting");
 
+    const e164 = phoneDisplay.trim() ? toE164(phoneDisplay) : undefined;
+
     const payload = {
       firstName: fd.get("firstName") as string,
       email: fd.get("email") as string,
+      phone: e164 ?? undefined,
       neighborhood: (fd.get("neighborhood") as string) || undefined,
       serviceType: fd.get("serviceType") as ServiceTypeValue,
       serviceFrequency: fd.get("serviceFrequency") as ServiceFrequencyValue,
@@ -127,6 +155,29 @@ export default function BookForm() {
               <p className="text-xs text-[#c87c6a] mt-1" style={ff}>{fieldErrors.email}</p>
             )}
           </div>
+        </div>
+
+        {/* Phone */}
+        <div>
+          <label className={labelClass} style={ff}>
+            Phone
+            <span className="text-[#b8a898] normal-case tracking-normal ml-2" style={ff}>
+              Optional — for quick scheduling questions
+            </span>
+          </label>
+          <input
+            type="tel"
+            value={phoneDisplay}
+            onChange={handlePhoneChange}
+            placeholder="(248) 555-1234"
+            className={inputClass}
+            style={ff}
+            autoComplete="tel"
+            maxLength={14}
+          />
+          {fieldErrors.phone && (
+            <p className="text-xs text-[#c87c6a] mt-1" style={ff}>{fieldErrors.phone}</p>
+          )}
         </div>
 
         {/* Neighborhood */}

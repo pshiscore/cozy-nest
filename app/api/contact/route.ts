@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 import {
   SERVICE_TYPES,
   SERVICE_FREQUENCIES,
@@ -24,6 +25,7 @@ const VALID_ADDONS = Object.keys(ADDONS) as AddonValue[];
 interface ContactPayload {
   email: string;
   firstName: string;
+  phone?: string; // E.164 format, e.g. "+12485551234"
   neighborhood?: string;
   serviceType: ServiceTypeValue;
   serviceFrequency: ServiceFrequencyValue;
@@ -53,7 +55,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { email, firstName, neighborhood, serviceType, serviceFrequency, addons, message } = body;
+  const { email, firstName, phone, neighborhood, serviceType, serviceFrequency, addons, message } = body;
 
   if (!email || !isValidEmail(email)) {
     return NextResponse.json({ error: "A valid email address is required." }, { status: 400 });
@@ -73,6 +75,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: `Invalid add-on: ${invalid}` }, { status: 400 });
     }
   }
+  if (phone) {
+    const parsed = parsePhoneNumberFromString(phone, "US");
+    if (!parsed?.isValid()) {
+      return NextResponse.json({ error: "Please enter a valid phone number." }, { status: 400 });
+    }
+  }
 
   // Build Brevo attributes — only include keys with real values
   const attributes: Record<string, string> = {
@@ -81,6 +89,7 @@ export async function POST(req: NextRequest) {
     SERVICE_FREQUENCY: serviceFrequency,
     LEAD_SOURCE: "contact_form",
   };
+  if (phone) attributes.SMS = phone;
   if (neighborhood?.trim()) attributes.NEIGHBORHOOD = neighborhood.trim();
   if (addons && addons.length > 0) attributes.ADDONS = addons.join(",");
   if (message?.trim()) attributes.MESSAGE = message.trim();
@@ -101,6 +110,11 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Translate phone to national display format for emails
+  const phoneDisplay = phone
+    ? (parsePhoneNumberFromString(phone, "US")?.formatNational() ?? phone)
+    : null;
+
   // Translate identifiers to human-readable labels for emails
   const serviceLabel = getServiceTypeLabel(serviceType);
   const frequencyLabel = getServiceFrequencyLabel(serviceFrequency);
@@ -116,6 +130,7 @@ export async function POST(req: NextRequest) {
     <h3 style="font-family:sans-serif;color:#7a9478;margin-top:24px;margin-bottom:8px;text-transform:uppercase;font-size:11px;letter-spacing:1px">Contact</h3>
     <p style="font-family:sans-serif;margin:4px 0"><strong>Name:</strong> ${firstName.trim()}</p>
     <p style="font-family:sans-serif;margin:4px 0"><strong>Email:</strong> ${email}</p>
+    ${phoneDisplay ? `<p style="font-family:sans-serif;margin:4px 0"><strong>Phone:</strong> ${phoneDisplay}</p>` : ""}
     ${neighborhood?.trim() ? `<p style="font-family:sans-serif;margin:4px 0"><strong>Neighborhood:</strong> ${neighborhood.trim()}</p>` : ""}
 
     <h3 style="font-family:sans-serif;color:#7a9478;margin-top:24px;margin-bottom:8px;text-transform:uppercase;font-size:11px;letter-spacing:1px">Service</h3>
@@ -135,6 +150,7 @@ export async function POST(req: NextRequest) {
   const notificationText =
     `New inquiry from ${firstName.trim()}\n\n` +
     `CONTACT\nName: ${firstName.trim()}\nEmail: ${email}` +
+    (phoneDisplay ? `\nPhone: ${phoneDisplay}` : "") +
     (neighborhood?.trim() ? `\nNeighborhood: ${neighborhood.trim()}` : "") +
     `\n\nSERVICE\nWhich Reset: ${serviceLabel}\nRhythm: ${frequencyLabel}\nAdd-ons: ${addonLabels}` +
     (message?.trim() ? `\n\nMESSAGE\n${message.trim()}` : "");
