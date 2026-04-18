@@ -4,7 +4,7 @@ const BREVO_API = "https://api.brevo.com/v3";
 const LIDIA_EMAIL = "hello@cozynestbylidia.com";
 const LIDIA_NAME = "Lidia @ Cozy Nest";
 const SENDER = { name: "Cozy Nest by Lidia", email: "hello@cozynestbylidia.com" };
-const LIST_ID = 2; // update to your actual Brevo list ID
+const LIST_ID = 3; // CozyNest — Your First Folder
 
 function brevoHeaders() {
   return {
