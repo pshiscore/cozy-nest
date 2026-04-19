@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import BookForm from "./BookForm";
 
 export const metadata = {
@@ -39,7 +40,9 @@ export default function BookPage() {
       {/* Form + sidebar */}
       <section className="bg-[#f0ece4] py-10 pb-12">
         <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-[1fr_320px] gap-10">
-          <BookForm />
+          <Suspense fallback={<div className="bg-[#e8e2d9] rounded-2xl p-8 min-h-[420px]" />}>
+            <BookForm />
+          </Suspense>
 
           {/* Sidebar */}
           <div className="space-y-5">

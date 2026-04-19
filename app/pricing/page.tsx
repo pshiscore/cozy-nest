@@ -20,6 +20,7 @@ const plans = [
     ],
     featured: false,
     cta: "Choose Soft",
+    bookHref: "/book?serviceType=home_reset_90&serviceFrequency=once_week",
   },
   {
     name: "The Daily Reset",
@@ -35,6 +36,7 @@ const plans = [
     ],
     featured: true,
     cta: "Choose Daily",
+    bookHref: "/book?serviceType=home_reset_60&serviceFrequency=five_week",
   },
   {
     name: "The Light Reset",
@@ -50,6 +52,7 @@ const plans = [
     ],
     featured: false,
     cta: "Choose Light",
+    bookHref: "/book?serviceType=home_reset_60&serviceFrequency=twice_week",
   },
 ];
 
@@ -150,7 +153,7 @@ export default function PricingPage() {
                   ))}
                 </ul>
                 <Link
-                  href="/book"
+                  href={plan.bookHref}
                   className={`text-xs tracking-widest uppercase px-6 py-3 rounded-full text-center transition-colors ${
                     plan.featured
                       ? "bg-[#c87c6a] text-[#f0ece4] hover:bg-[#b36a5a]"

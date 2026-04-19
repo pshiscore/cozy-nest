@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import {
   SERVICE_TYPES,
@@ -19,8 +20,10 @@ const inputClass =
 const selectClass = inputClass + " appearance-none";
 const ff = { fontFamily: "var(--font-poppins), sans-serif" };
 
+const SERVICE_TYPE_KEYS = Object.keys(SERVICE_TYPES) as ServiceTypeValue[];
+const SERVICE_FREQUENCY_KEYS = Object.keys(SERVICE_FREQUENCIES) as ServiceFrequencyValue[];
+
 function formatPhoneDisplay(raw: string): string {
-  // Strip everything except digits and leading +
   const digits = raw.replace(/\D/g, "");
   if (digits.length === 0) return "";
   if (digits.length <= 3) return `(${digits}`;
@@ -35,11 +38,26 @@ function toE164(display: string): string | null {
 }
 
 export default function BookForm() {
+  const searchParams = useSearchParams();
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [selectedAddons, setSelectedAddons] = useState<AddonValue[]>([]);
   const [phoneDisplay, setPhoneDisplay] = useState("");
+  const [serviceType, setServiceType] = useState<ServiceTypeValue | "">("");
+  const [serviceFrequency, setServiceFrequency] = useState<ServiceFrequencyValue | "">("");
+
+  // Pre-fill from query params (e.g. coming from pricing page)
+  useEffect(() => {
+    const st = searchParams.get("serviceType");
+    const sf = searchParams.get("serviceFrequency");
+    if (st && SERVICE_TYPE_KEYS.includes(st as ServiceTypeValue)) {
+      setServiceType(st as ServiceTypeValue);
+    }
+    if (sf && SERVICE_FREQUENCY_KEYS.includes(sf as ServiceFrequencyValue)) {
+      setServiceFrequency(sf as ServiceFrequencyValue);
+    }
+  }, [searchParams]);
 
   function toggleAddon(key: AddonValue) {
     setSelectedAddons((prev) =>
@@ -48,16 +66,15 @@ export default function BookForm() {
   }
 
   function handlePhoneChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const formatted = formatPhoneDisplay(e.target.value);
-    setPhoneDisplay(formatted);
+    setPhoneDisplay(formatPhoneDisplay(e.target.value));
   }
 
   function validate(fd: FormData): Record<string, string> {
     const errors: Record<string, string> = {};
     if (!fd.get("firstName")?.toString().trim()) errors.firstName = "First name is required.";
     if (!fd.get("email")?.toString().trim()) errors.email = "Email is required.";
-    if (!fd.get("serviceType")) errors.serviceType = "Please select a service.";
-    if (!fd.get("serviceFrequency")) errors.serviceFrequency = "Please select a rhythm.";
+    if (!serviceType) errors.serviceType = "Please select a service.";
+    if (!serviceFrequency) errors.serviceFrequency = "Please select a rhythm.";
     if (phoneDisplay.trim() && !toE164(phoneDisplay)) {
       errors.phone = "Please enter a valid phone number.";
     }
@@ -84,8 +101,8 @@ export default function BookForm() {
       email: fd.get("email") as string,
       phone: e164 ?? undefined,
       neighborhood: (fd.get("neighborhood") as string) || undefined,
-      serviceType: fd.get("serviceType") as ServiceTypeValue,
-      serviceFrequency: fd.get("serviceFrequency") as ServiceFrequencyValue,
+      serviceType,
+      serviceFrequency,
       addons: selectedAddons.length > 0 ? selectedAddons : undefined,
       message: (fd.get("message") as string) || undefined,
     };
@@ -198,10 +215,15 @@ export default function BookForm() {
             <label className={labelClass} style={ff}>
               Which Reset <span className="text-[#c87c6a]">*</span>
             </label>
-            <select name="serviceType" defaultValue="" className={selectClass} style={ff}>
+            <select
+              value={serviceType}
+              onChange={(e) => setServiceType(e.target.value as ServiceTypeValue)}
+              className={selectClass}
+              style={ff}
+            >
               <option value="" disabled>Select service</option>
-              {(Object.entries(SERVICE_TYPES) as [ServiceTypeValue, string][]).map(([key, label]) => (
-                <option key={key} value={key}>{label}</option>
+              {SERVICE_TYPE_KEYS.map((key) => (
+                <option key={key} value={key}>{SERVICE_TYPES[key]}</option>
               ))}
             </select>
             {fieldErrors.serviceType && (
@@ -212,10 +234,15 @@ export default function BookForm() {
             <label className={labelClass} style={ff}>
               Rhythm <span className="text-[#c87c6a]">*</span>
             </label>
-            <select name="serviceFrequency" defaultValue="" className={selectClass} style={ff}>
+            <select
+              value={serviceFrequency}
+              onChange={(e) => setServiceFrequency(e.target.value as ServiceFrequencyValue)}
+              className={selectClass}
+              style={ff}
+            >
               <option value="" disabled>Select frequency</option>
-              {(Object.entries(SERVICE_FREQUENCIES) as [ServiceFrequencyValue, string][]).map(([key, label]) => (
-                <option key={key} value={key}>{label}</option>
+              {SERVICE_FREQUENCY_KEYS.map((key) => (
+                <option key={key} value={key}>{SERVICE_FREQUENCIES[key]}</option>
               ))}
             </select>
             {fieldErrors.serviceFrequency && (

@@ -7,6 +7,7 @@ export const SERVICE_TYPES = {
 } as const;
 
 export const SERVICE_FREQUENCIES = {
+  five_week: "5× / week",
   twice_week: "2× / week",
   once_week: "1× / week",
   one_time: "One-time visit",
