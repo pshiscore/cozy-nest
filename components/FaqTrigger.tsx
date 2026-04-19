@@ -9,10 +9,10 @@ export default function FaqTrigger() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="text-[#b8c8b0] text-xs tracking-widest uppercase underline underline-offset-4 hover:text-[#f0ece4] transition-colors mt-4 block mx-auto"
+        className="border border-[#3d5c44] text-[#3d5c44] text-xs tracking-widest uppercase px-8 py-4 rounded-full hover:bg-[#e8e2d9] transition-colors"
         style={{ fontFamily: "var(--font-poppins), sans-serif" }}
       >
-        Have questions? See our FAQ
+        Read the FAQ
       </button>
       {open && <FaqModal onClose={() => setOpen(false)} />}
     </>

@@ -254,6 +254,30 @@ export default function HomePage() {
           >
             Book Your First Reset
           </Link>
+        </div>
+      </section>
+
+      {/* FAQ section */}
+      <section className="bg-[#f0ece4] py-14">
+        <div className="max-w-2xl mx-auto px-6 text-center">
+          <p
+            className="text-xs tracking-widest uppercase text-[#7a9478] mb-3"
+            style={{ fontFamily: "var(--font-poppins), sans-serif" }}
+          >
+            Questions
+          </p>
+          <h2
+            className="text-3xl md:text-4xl text-[#3d5c44] mb-4"
+            style={{ fontFamily: "var(--font-lora), serif" }}
+          >
+            A few things people ask
+          </h2>
+          <p
+            className="text-sm text-[#5a6b5c] font-light mb-8"
+            style={{ fontFamily: "var(--font-poppins), sans-serif" }}
+          >
+            From what a reset actually covers to how subscriptions work.
+          </p>
           <FaqTrigger />
         </div>
       </section>
