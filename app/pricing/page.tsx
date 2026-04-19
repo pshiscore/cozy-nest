@@ -9,9 +9,9 @@ const plans = [
   {
     name: "The Soft Weekly",
     visits: "1 Visit / Week",
-    price: "$135",
+    price: "$150",
     unit: "/wk",
-    perVisit: "≈ $135 / visit · 90 min",
+    perVisit: "≈ $150 / visit · 90 min",
     features: [
       "One longer reset per week",
       "Whole-home tidy & refresh",
@@ -26,7 +26,7 @@ const plans = [
     visits: "5 Visits / Week",
     price: "$525",
     unit: "/wk",
-    perVisit: "≈ $21 / visit · 60 min",
+    perVisit: "≈ $105 / visit · 60 min",
     features: [
       "One reset every weekday",
       "All rooms, every visit",
@@ -41,9 +41,9 @@ const plans = [
     visits: "2 Visits / Week",
     price: "$240",
     unit: "/wk",
-    perVisit: "≈ $30 / visit · 30 min",
+    perVisit: "≈ $120 / visit · 60 min",
     features: [
-      "Two short tidy visits each week",
+      "Two 60-min tidy visits each week",
       "Kitchen, living, bathroom touch-up",
       "Same Lidia, every time",
       "Pause anytime",
