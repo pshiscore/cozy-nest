@@ -1,9 +1,22 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "About — Cozy Nest by Lidia",
+  title: "About",
   description:
     "A small studio for tidy, calm homes. Serving Northville and Metro Detroit.",
+  openGraph: {
+    title: "About — Cozy Nest by Lidia",
+    description:
+      "A small studio for tidy, calm homes. Serving Northville, Plymouth, Novi, Canton, Livonia, and Farmington Hills.",
+    url: "https://cozynestbylidia.com/about",
+    images: [{ url: "/opengraph-image" }],
+  },
+  twitter: {
+    title: "About — Cozy Nest by Lidia",
+    description:
+      "A small studio for tidy, calm homes. Serving Northville and Metro Detroit.",
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function AboutPage() {

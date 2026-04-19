@@ -1,8 +1,60 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Cozy Nest by Lidia — Home Resets in Northville, MI",
+  description:
+    "A subscription cleaning studio built around short, frequent visits. Come home to calm.",
+  openGraph: {
+    title: "Cozy Nest by Lidia — Home Resets in Northville, MI",
+    description:
+      "A subscription cleaning studio built around short, frequent visits. Come home to calm.",
+    url: "https://cozynestbylidia.com",
+    images: [{ url: "/opengraph-image" }],
+  },
+  twitter: {
+    title: "Cozy Nest by Lidia — Home Resets in Northville, MI",
+    description:
+      "A subscription cleaning studio built around short, frequent visits. Come home to calm.",
+    images: ["/opengraph-image"],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "HomeAndConstructionBusiness",
+  name: "Cozy Nest by Lidia",
+  description:
+    "A subscription home-reset studio in Northville, MI. Short, frequent visits that bring your home back to calm.",
+  url: "https://cozynestbylidia.com",
+  email: "hello@cozynestbylidia.com",
+  // TODO: add "telephone" once business number is confirmed
+  // TODO: add "sameAs" for Instagram / Google Business Profile URLs
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Northville",
+    addressRegion: "MI",
+    addressCountry: "US",
+  },
+  areaServed: [
+    "Northville, MI",
+    "Plymouth, MI",
+    "Novi, MI",
+    "Canton, MI",
+    "Livonia, MI",
+    "Farmington Hills, MI",
+  ],
+  // TODO: confirm exact hours before adding openingHoursSpecification
+};
 
 export default function HomePage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Hero */}
       <section className="bg-[#f0ece4] relative overflow-hidden">
         {/* Decorative blobs */}

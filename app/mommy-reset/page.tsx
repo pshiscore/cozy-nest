@@ -1,9 +1,22 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Mommy Reset — Cozy Nest by Lidia",
+  title: "Mommy Reset",
   description:
     "One soft hour while the baby naps. The kitchen put back together. Peace waiting when the nap ends.",
+  openGraph: {
+    title: "Mommy Reset — Cozy Nest by Lidia",
+    description:
+      "One soft hour while the baby naps. The kitchen put back together. Toys rehomed, laundry folded. Peace waiting when the nap ends.",
+    url: "https://cozynestbylidia.com/mommy-reset",
+    images: [{ url: "/opengraph-image" }],
+  },
+  twitter: {
+    title: "Mommy Reset — Cozy Nest by Lidia",
+    description:
+      "One soft hour while the baby naps. The kitchen put back together. Peace waiting when the nap ends.",
+    images: ["/opengraph-image"],
+  },
 };
 
 const steps = [

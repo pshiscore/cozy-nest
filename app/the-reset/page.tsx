@@ -1,9 +1,22 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "The Home Reset — Cozy Nest by Lidia",
+  title: "The Home Reset",
   description:
     "A short, regular visit designed to bring your home back to calm. Not a scrub-down. A beautiful, gentle reset.",
+  openGraph: {
+    title: "The Home Reset — Cozy Nest by Lidia",
+    description:
+      "A short, regular visit designed to bring your home back to calm. Not a scrub-down. A beautiful, gentle reset.",
+    url: "https://cozynestbylidia.com/the-reset",
+    images: [{ url: "/opengraph-image" }],
+  },
+  twitter: {
+    title: "The Home Reset — Cozy Nest by Lidia",
+    description:
+      "A short, regular visit designed to bring your home back to calm. Not a scrub-down. A beautiful, gentle reset.",
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function TheResetPage() {

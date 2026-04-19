@@ -2,8 +2,19 @@ import { Suspense } from "react";
 import BookForm from "./BookForm";
 
 export const metadata = {
-  title: "Book a Visit — Cozy Nest by Lidia",
+  title: "Book a Visit",
   description: "Tell us a little about your home. Lidia replies personally within a day.",
+  openGraph: {
+    title: "Book a Visit — Cozy Nest by Lidia",
+    description: "Tell us a little about your home. Lidia replies personally within a day — usually sooner.",
+    url: "https://cozynestbylidia.com/book",
+    images: [{ url: "/opengraph-image" }],
+  },
+  twitter: {
+    title: "Book a Visit — Cozy Nest by Lidia",
+    description: "Tell us a little about your home. Lidia replies personally within a day.",
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function BookPage() {

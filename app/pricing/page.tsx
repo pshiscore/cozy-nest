@@ -1,8 +1,19 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Pricing — Cozy Nest by Lidia",
-  description: "Three subscription rhythms. No long contracts, no fine print.",
+  title: "Pricing",
+  description: "Three subscription rhythms — weekly, twice-weekly, or daily. Starting at $150/wk. No long contracts, no fine print.",
+  openGraph: {
+    title: "Pricing — Cozy Nest by Lidia",
+    description: "Three subscription rhythms — weekly, twice-weekly, or daily. Starting at $150/wk. No long contracts, no fine print.",
+    url: "https://cozynestbylidia.com/pricing",
+    images: [{ url: "/opengraph-image" }],
+  },
+  twitter: {
+    title: "Pricing — Cozy Nest by Lidia",
+    description: "Three subscription rhythms. Starting at $150/wk. No long contracts, no fine print.",
+    images: ["/opengraph-image"],
+  },
 };
 
 const plans = [

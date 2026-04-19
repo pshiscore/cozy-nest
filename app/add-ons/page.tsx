@@ -1,9 +1,22 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Add-Ons — Cozy Nest by Lidia",
+  title: "Add-Ons",
   description:
-    "Extra touches for when you need a little more. Add any of these to your regular reset.",
+    "Extra touches for when you need a little more. Fridge cleaning, pantry reset, deep clean, toy purge, and organization projects.",
+  openGraph: {
+    title: "Add-Ons — Cozy Nest by Lidia",
+    description:
+      "Extra touches for when you need a little more. Fridge cleaning, pantry reset, deep clean, toy purge, and organization projects.",
+    url: "https://cozynestbylidia.com/add-ons",
+    images: [{ url: "/opengraph-image" }],
+  },
+  twitter: {
+    title: "Add-Ons — Cozy Nest by Lidia",
+    description:
+      "Extra touches for when you need a little more. Add any of these to your regular reset.",
+    images: ["/opengraph-image"],
+  },
 };
 
 const addOns = [

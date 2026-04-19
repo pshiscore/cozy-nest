@@ -19,9 +19,21 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Cozy Nest by Lidia — Home Resets in Northville, MI",
+  metadataBase: new URL("https://cozynestbylidia.com"),
+  title: {
+    default: "Cozy Nest by Lidia — Home Resets in Northville, MI",
+    template: "%s | Cozy Nest by Lidia",
+  },
   description:
     "A subscription cleaning studio built around short, frequent visits. Come home to calm.",
+  openGraph: {
+    siteName: "Cozy Nest by Lidia",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({

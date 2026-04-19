@@ -1,6 +1,17 @@
 export const metadata = {
-  title: "What's Included — Cozy Nest by Lidia",
-  description: "Room by room, every visit follows the same calm rhythm.",
+  title: "What's Included",
+  description: "Room by room, every visit follows the same calm rhythm — kitchen, living areas, floors, bathrooms, and more.",
+  openGraph: {
+    title: "What's Included — Cozy Nest by Lidia",
+    description: "Room by room, every visit follows the same calm rhythm — kitchen, living areas, floors, bathrooms, and more.",
+    url: "https://cozynestbylidia.com/the-reset/included",
+    images: [{ url: "/opengraph-image" }],
+  },
+  twitter: {
+    title: "What's Included — Cozy Nest by Lidia",
+    description: "Room by room, every visit follows the same calm rhythm.",
+    images: ["/opengraph-image"],
+  },
 };
 
 const rooms = [
