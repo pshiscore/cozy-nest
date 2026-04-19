@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import FaqTrigger from "@/components/FaqTrigger";
 
 export const metadata: Metadata = {
   title: "Cozy Nest by Lidia — Home Resets in Northville, MI",
@@ -253,6 +254,7 @@ export default function HomePage() {
           >
             Book Your First Reset
           </Link>
+          <FaqTrigger />
         </div>
       </section>
     </>
