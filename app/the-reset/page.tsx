@@ -42,9 +42,13 @@ export default function TheResetPage() {
             className="text-[#5a6b5c] text-lg font-light italic leading-relaxed max-w-xl mx-auto mb-10"
             style={{ fontFamily: "var(--font-lora), serif" }}
           >
-            A short, regular visit designed to bring your home back to calm. Not
-            a scrub-down. Not a deep clean. Just a beautiful, gentle reset you
-            can rely on.
+            A simple, consistent visit to help bring your home back to a place
+            of calm. Not a full scrub-down, but the kind of reset that makes a
+            real difference in your day-to-day.
+            <br />
+            <br />
+            For those times you need extra care, deep cleaning is always an
+            option.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             {["~ 30 – 90 minute visits", "~ Daily or weekly", "~ Tidy, reset, maintain"].map(

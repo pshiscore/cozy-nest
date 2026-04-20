@@ -90,8 +90,9 @@ export default function PricingPage() {
             className="text-[#5a6b5c] text-base font-light italic leading-relaxed"
             style={{ fontFamily: "var(--font-lora), serif" }}
           >
-            Three subscription rhythms — pick the cadence that matches your
-            week. Pause or change anytime. No long contracts, no fine print.
+            Find a rhythm that feels right for your home. You&apos;re free to
+            pause or make changes whenever you need, with no long-term
+            commitment.
           </p>
         </div>
       </section>
